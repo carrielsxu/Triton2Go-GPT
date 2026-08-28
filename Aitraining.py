@@ -3,15 +3,25 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score
 import pandas as pd
-food = pd.read_csv("food.csv")
-X = food["calories", "protein", "sodium", "fat", "carbs", "vegetarian","allergens","Vegetarian","Vagen"]
-y = food["liked"]
+import numpy as np
 
+food = pd.read_csv("foods.csv")
+X = food[[
+    "Calories",
+    "Protein",
+    "Sodium",
+    "Fat",
+    "Carbs",
+    "Vegetarian?",
+    "Major allergens?",
+    "Vegan?"
+]]
+
+y = []
 print(X.shape)
-print(y.shape)
-X = food.data.features
-y = food.data.targets
-print(food .metadata)
+
+food_features = X 
+favourite_labels = y
 
 # Logistic Regression
 
