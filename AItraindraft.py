@@ -4,7 +4,7 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score 
 import pandas as pd
 import numpy as np
-
+from binaryrecomendfoodfunction import wantcalories,wantfat,wantprotein,wantCholesterol,wantSodium,wantCarbs,wantFiber,wantSugar,hasAllergy
 # make a list
 food = pd.read_csv("foods.csv")
 menu = []
@@ -13,17 +13,67 @@ for name in food["Name"]:
     menu.append(name)
 for foodname in menu: 
     ratemyfood[foodname] = 0
-print("hi Jing")
-dairy_allergy = input("Are you allergic to dairy? yes/no: ")
-if dairy_allergy == "yes":
-    for index, row in food.iterrows():
-        name = row["Name"]
-        if row["Allergy: dairy?"] or row["Allergy: eggs?"] or row["Allergy: gluten?"] or row["Allergy: soy?"] or row["Allergy: wheat?"] or row["Allergy: sesame?"] or row["Allergy: fish?"] == "yes":
-            del ratemyfood[name]
-    print(ratemyfood)
+
+#basic set up
+food["Fat"] = pd.to_numeric(food["Fat"], errors="coerce")
+food["Fat"] = food["Fat"].fillna(0)
+food["Calories"] = pd.to_numeric(food["Calories"], errors="coerce")
+food["Calories"] = food["Calories"].fillna(0)
+food["Cholesterol"] = pd.to_numeric(food["Cholesterol"], errors="coerce")
+food["Cholesterol"] = food["Cholesterol"].fillna(0)
+food["Sodium"] = pd.to_numeric(food["Sodium"], errors="coerce")
+food["Sodium"] = food["Sodium"].fillna(0)
+food["Carbs"] = pd.to_numeric(food["Carbs"], errors="coerce")
+food["Carbs"] = food["Carbs"].fillna(0)
+food["Fiber"] = pd.to_numeric(food["Fiber"], errors="coerce")
+food["Fiber"] = food["Fiber"].fillna(0)
+food["Sugar"] = pd.to_numeric(food["Sugar"], errors="coerce")
+food["Sugar"] = food["Sugar"].fillna(0)
+food["Protein"] = pd.to_numeric(food["Protein"], errors="coerce")
+food["Protein"] = food["Protein"].fillna(0)
+
+
+food_unique = food.drop_duplicates(subset=["Name"])
+
+Allergytype = (input("do you have any allergy?tell it by yes/no")).lower()
+while Allergytype == "yes":
+    hasAllergy(ratemyfood,food_unique) 
+    Allergytype = (input("do you have any allergy?tell it by yes/no")).lower()
 
 
 # print(ratemyfood)
+# print("after protein")
+# print(ratemyfood["Turkey Meatball Sub"])
+
+#test method
+# for name1 in ratemyfood:
+#     print(name1,ratemyfood[name1])
+# print(ratemyfood)
+
+wantcalories(ratemyfood,food_unique)
+wantfat(ratemyfood,food_unique)
+wantprotein(ratemyfood,food_unique)
+wantCholesterol(ratemyfood,food_unique)
+wantSodium(ratemyfood,food_unique)
+wantCarbs(ratemyfood,food_unique)
+wantFiber(ratemyfood,food_unique)
+wantSugar(ratemyfood,food_unique)
+
+topchoice = []
+for i in range(5):
+    highest_score = -1
+    highest_food = ""
+    for name in ratemyfood:
+        if name not in topchoice:
+            if ratemyfood[name] > highest_score:
+                highest_score = ratemyfood[name]
+                highest_food = name
+    topchoice.append(highest_food)
+
+print(topchoice)
+
+
+
 # # test button,don't use it except need
 # # print(menu)
 # print(ratemyfood)
