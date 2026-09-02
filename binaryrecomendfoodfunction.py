@@ -43,7 +43,7 @@ def wantcalories(ratemyfood,food_unique):
     return ratemyfood
 
 def wantfat(ratemyfood,food_unique):
-    Fatchoice = (input("Do you want high calories? yes/no: ")).lower()
+    Fatchoice = (input("Do you want high fat? yes/no: ")).lower()
     Fatlist = [] 
     if Fatchoice == "yes":
         score = len(ratemyfood)
@@ -61,7 +61,7 @@ def wantfat(ratemyfood,food_unique):
     return ratemyfood
 
 def wantCholesterol(ratemyfood,food_unique):
-    Cholesterolchoice = (input("Do you want high calorCholesterol? yes/no: ")).lower()
+    Cholesterolchoice = (input("Do you want high Cholesterol? yes/no: ")).lower()
     Cholesterollist = [] 
     if Cholesterolchoice == "yes":
         score = len(ratemyfood)

@@ -1,9 +1,13 @@
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score 
-import pandas as pd
+from sklearn.tree import DecisionTreeRegressor
+import pandas as pd 
 import numpy as np
+from sklearn.metrics import mean_absolute_error
+import matplotlib.pyplot as plt
+from sklearn.tree import DecisionTreeClassifier, plot_tree
+
 from binaryrecomendfoodfunction import wantcalories,wantfat,wantprotein,wantCholesterol,wantSodium,wantCarbs,wantFiber,wantSugar,hasAllergy
 # make a list
 food = pd.read_csv("foods.csv")
@@ -39,16 +43,8 @@ Allergytype = (input("do you have any allergy?tell it by yes/no")).lower()
 while Allergytype == "yes":
     hasAllergy(ratemyfood,food_unique) 
     Allergytype = (input("do you have any allergy?tell it by yes/no")).lower()
+    allowed_foods = list(ratemyfood.keys())
 
-
-# print(ratemyfood)
-# print("after protein")
-# print(ratemyfood["Turkey Meatball Sub"])
-
-#test method
-# for name1 in ratemyfood:
-#     print(name1,ratemyfood[name1])
-# print(ratemyfood)
 
 wantcalories(ratemyfood,food_unique)
 wantfat(ratemyfood,food_unique)
@@ -69,68 +65,185 @@ for i in range(5):
                 highest_score = ratemyfood[name]
                 highest_food = name
     topchoice.append(highest_food)
-
 print(topchoice)
 
+#############################################
+# Choose the nutrition information that will be used to train the model
+X = food[[
+    "Calories",
+    "Protein",
+    "Sodium",
+    "Fat",
+    "Carbs",
+   ]]
+
+# Create a new column to store whether the user likes each food
+# Ask the user to rate some foods as like or dislike
+# Change the user's answer into 1 for like and 0 for dislike
+# Store the user's like/dislike answers as the target values
+# Keep only the foods that the user has already rated
+# Store the user's like/dislike answers as the target values
+#test value
+food["Target"] = -1
+
+ratemyfood = list(food["Name"].head(20))
+
+for name in ratemyfood:
+    answer = input("Do you like " + name + "? yes/no: ").lower()
+    if answer == "yes":
+        food.loc[food["Name"]==name,"Target"] = 1
+    if answer == "no":
+        food.loc[food["Name"]==name,"Target"] = 0   
+
+ratemyfood = food[food["Target"]!= -1]
+y = ratemyfood["Target"]
 
 
-# # test button,don't use it except need
-# # print(menu)
-# print(ratemyfood)
+# example active user preferences (from your frontend UI or session)
+user_pref = {
+    "is_vegan": True,
+    "is_vegetarian": True,
+    "has_dairy_allergy": True,
+    "has_gluten_allergy": False,
+    "current_time": "Lunch",
+}
 
-#rate calculate function
+def evaluate_food_match(row, user):
+        # Rule 1: Strict Vegan / Vegetarian checks
+        if user["is_vegan"] and row["Vegan?"] not in [1, True, "yes"]:
+            return 0
+        if user["is_vegetarian"] and row["Vegetarian?"] not in [1, True, "yes"]:
+            return 0
+
+        # Rule 2: Allergen checks (If food contains allergen user is allergic to)
+        if user["has_dairy_allergy"] and row["Allergy: dairy?"] in [1, True, "yes"]:
+            return 0
+        if user["has_gluten_allergy"] and row["Allergy: gluten?"] in [1, True, "yes"]:
+            return 0
+
+        # Rule 3: Time of day match (allow missing values or matching strings)
+        if (
+            pd.notna(row["Time of day"])
+            and row["Time of day"] != user["current_time"]
+        ):
+            return 0
+
+        return 1  # Food matches all preference criteria
 
 
-# food = pd.read_csv("foods.csv")
-# X = food[[
-#     "Calories",
-#     "Protein",
-#     "Sodium",
-#     "Fat",
-#     "Carbs",
-#     "Allergy: dairy?",
-#     "Allergy: eggs?",
-#     "Allergy: gluten?",
-#     "Allergy: soy?",
-#     "Allergy: wheat?",
-#     "Allergy: sesame?",
-#     "Allergy: fish?",
-#     "Vegetarian?",
-#     "Vegan?",
-#     "Time of day",
-#     "Kind of product?",
-#     "Dining hall",
-# ]]
+
+# print(f"Target distribution:\n{y.value_counts()}")
+
+# define feature columns 'X'
+feature_cols = [
+    "Calories",
+    "Protein",
+    "Sodium",
+    "Fat",
+    "Carbs",
+    "Allergy: dairy?",
+    "Allergy: eggs?",
+    "Allergy: gluten?",
+    "Allergy: soy?",
+    "Allergy: wheat?",
+    "Allergy: sesame?",
+    "Allergy: fish?",
+    "Vegetarian?",
+    "Vegan?",
+    "Time of day",
+    "Kind of product?",
+    "Dining hall",]
+
+accuracy_list = []
+for i in range(10):
+    # X = food[feature_cols].copy()
+    X = ratemyfood[feature_cols].copy()
+
+    # one-hot encode categorical strings ('time of day', 'dining hall', etc.)
+    X = pd.get_dummies(X, drop_first=True)
+
+    # split into training and test sets
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size = 0.2, random_state = i
+    )
+
+    # initialize and fit classifier
+    X_train = X_train.fillna(X_train.median(numeric_only = True))
+    X_test = X_test.fillna(X_train.median(numeric_only = True))
+
+    clf = DecisionTreeClassifier(criterion = "gini", max_depth = 3, random_state = 42)
+    clf.fit(X_train, y_train)
+
+    # predict and evaluate
+    y_pred = clf.predict(X_test)
+    print(f"Accuracy: {accuracy_score(y_test, y_pred):.2f}")
+
+    # plot tree visualization
+    plt.figure(figsize = (12, 8))
+    plot_tree(
+        clf,
+        feature_names = X.columns.tolist(),
+        class_names = [str(c) for c in clf.classes_],
+        filled = True,
+    )
+    plt.show()
 
 
-# y = []
-# print(X.shape)
+accuracy = accuracy_score(y_test, y_pred)
+accuracy_list.append(accuracy)
+print("Accuracy:", accuracy)
+print("Average Accuracy:", np.mean(accuracy_list)) 
 
-# food_features = X 
-# favourite_labels = y
+# Train the model again using all rated foods
+X = ratemyfood[feature_cols].copy()
+X = pd.get_dummies(X, drop_first=True)
 
-# # Logistic Regression
+X = X.fillna(X.median(numeric_only=True))
 
-# favourite_prediction_accuracies = []
+clf = DecisionTreeClassifier(
+    criterion="gini",
+    max_depth=3,
+    random_state=42
+)
 
-# food_train, food_test, favourite_train, favourite_test = train_test_split(
-#     food_features,
-#     favourite_labels,
-#     test_size=0.2,
-#     random_state=5
-#     )
+clf.fit(X, y)
 
-  
-# scaler = StandardScaler()
-# food_train = scaler.fit_transform(food_train)
-# food_test = scaler.transform(food_test)
-# food_preference_model = LogisticRegression(max_iter=1000)
-# food_preference_model.fit(food_train, favourite_train)
-# prediction_accuracy = food_preference_model.score(
-#         food_test,
-#         favourite_test
-# )
 
-# favourite_prediction_accuracies.append(prediction_accuracy)
+# Find foods that the user has not rated
+unrated_food = food[
+    (food["Target"] == -1) &
+    (food["Name"].isin(allowed_foods))
+].copy()
 
-# print(np.mean(favourite_prediction_accuracies))
+# Get the same features from unrated foods
+unrated_X = unrated_food[feature_cols].copy()
+unrated_X = pd.get_dummies(unrated_X, drop_first=True)
+
+
+# Make sure unrated_X has exactly the same columns as training X
+unrated_X = unrated_X.reindex(
+    columns=X.columns,
+    fill_value=0)
+
+# Fill missing values
+unrated_X = unrated_X.fillna(
+    X.median(numeric_only=True))
+
+
+# Predict whether the user will like each unrated food
+unrated_predictions = clf.predict(unrated_X)
+
+
+# Save prediction
+unrated_food["Prediction"] = unrated_predictions
+
+
+# Keep foods predicted as liked
+recommended_food = unrated_food[
+    unrated_food["Prediction"] == 1
+].head(5)
+
+
+print("Machine Learning Recommendations:")
+for name in recommended_food["Name"]:
+    print(name)
