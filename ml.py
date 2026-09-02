@@ -35,8 +35,7 @@ def get_recommendation(text):
     user_features = pd.DataFrame([[is_vegan, no_dairy]], columns=["is_vegan", "no_dairy"])
     clf.predict(user_features)
 
-    # Change "Item" below to match your CSV's food name column (e.g., "Food Name", "Product")
-    name_column = "Item" 
+    name_column = "Name" 
 
     if "vegan" in text:
         match = food_df[food_df["is_vegan"] == 1][name_column].dropna().unique()
