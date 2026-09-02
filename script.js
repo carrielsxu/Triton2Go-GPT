@@ -5,7 +5,7 @@ let response = document.getElementById("response");
 let conversationHistory = [];
 
 
-button.onclick = function() {
+function sendMessage() {
     let userText = input.value.trim();
     if (userText === "") {
         return;
@@ -82,3 +82,11 @@ button.onclick = function() {
         console.error("Error:", error);
     });
 };
+
+button.onclick = sendMessage;
+
+input.addEventListener("keydown", function(event) {
+    if (event.key === "Enter") {
+        sendMessage();
+    }
+});
