@@ -1,38 +1,25 @@
-from flask import Flask, jsonify, request
-import pandas as pd
+from flask import Flask, request, jsonify, send_file
+from ml import get_recommendation 
 
 app = Flask(__name__)
 
-# 1. Load your foods file
-food_data = pd.read_csv("foods.csv")
+@app.route("/")
+def home():
+    return send_file("index.html")
 
+@app.route("/style.css")
+def style():
+    return send_file("style.css")
 
-@app.route("/get-recommendations", methods=["POST"])
-def get_recommendations():
-    # Get the food name the user liked from the website
-    user_input = request.json  # Example: {"liked_food": "Black Coffee"}
-    liked_item_name = user_input.get("liked_food")
+@app.route("/script.js")
+def script():
+    return send_file("script.js")
 
-    # Find that food in your CSV file
-    liked_food_row = food_data[food_data["Name"] == liked_item_name]
-
-    if liked_food_row.empty:
-        # If no food was picked yet, just show the first 3 foods
-        suggestions = food_data["Name"].head(3).tolist()
-    else:
-        # Get the dining hall or time of day of the liked food
-        dining_hall = liked_food_row["Dining hall"].values[0]
-
-        # Find other foods from the same dining hall
-        matching_foods = food_data[food_data["Dining hall"] == dining_hall]
-
-        # Get up to 3 food names (excluding the one they already picked)
-        suggestions = matching_foods[matching_foods["Name"] != liked_item_name][
-            "Name"
-        ].head(3).tolist()
-
-    return jsonify({"recommended_foods": suggestions})
-
+@app.route("/chat", methods=["POST"])
+def chat():
+    text = request.json.get("message", "")
+    reply = get_recommendation(text) 
+    return jsonify({"reply": reply})
 
 if __name__ == "__main__":
-    app.run(port=5000)
+    app.run(debug=True)
