@@ -8,8 +8,43 @@ from sklearn.tree import DecisionTreeClassifier, plot_tree
 # load data and convert '?' to NaN
 food = pd.read_csv("foods.csv", na_values="?")
 
-# define target column 'y'
-y = food["liked"]
+# example active user preferences (from your frontend UI or session)
+user_pref = {
+    "is_vegan": True,
+    "is_vegetarian": True,
+    "has_dairy_allergy": True,
+    "has_gluten_allergy": False,
+    "current_time": "Lunch",
+}
+
+def evaluate_food_match(row, user):
+    # Rule 1: Strict Vegan / Vegetarian checks
+    if user["is_vegan"] and row["Vegan?"] not in [1, True, "Yes"]:
+        return 0
+    if user["is_vegetarian"] and row["Vegetarian?"] not in [1, True, "Yes"]:
+        return 0
+
+    # Rule 2: Allergen checks (If food contains allergen user is allergic to)
+    if user["has_dairy_allergy"] and row["Allergy: dairy?"] in [1, True, "Yes"]:
+        return 0
+    if user["has_gluten_allergy"] and row["Allergy: gluten?"] in [1, True, "Yes"]:
+        return 0
+
+    # Rule 3: Time of day match (allow missing values or matching strings)
+    if (
+        pd.notna(row["Time of day"])
+        and row["Time of day"] != user["current_time"]
+    ):
+        return 0
+
+    return 1  # Food matches all preference criteria
+
+
+# Generate the 'y' target column
+food["Target"] = food.apply(evaluate_food_match, user=user_pref, axis=1)
+
+y = food["Target"]
+print(f"Target distribution:\n{y.value_counts()}")
 
 # define feature columns 'X'
 feature_cols = [
