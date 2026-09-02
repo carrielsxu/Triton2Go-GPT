@@ -104,8 +104,11 @@ def get_recommendation(text, history):
         )
 
 
-    # Only send matching foods to the AI
-    matches = matches.head(10)
+    # Shuffle the matching foods so different foods appear each time
+    matches = matches.sample(frac=1).reset_index(drop=True)
+
+    # Send up to 100 matching foods to the AI
+    matches = matches.head(100)
 
 
     # Turn the matching CSV rows into text
@@ -162,6 +165,10 @@ If there are no matching foods in the FOOD DATA, say that no matching foods were
 Never ask the user to provide the CSV.
 
 Remember the previous conversation when answering follow-up questions.
+
+ALWAYS randomize every single answer option's foods and do not respond with the same first few foods at the beginning of the list.
+
+Carefully look at every single item in the given file
 """
             },
 
