@@ -4,7 +4,8 @@ let response = document.getElementById("response");
 
 button.onclick = function() {
     let userText = input.value;
-    response.textContent = "Thinking...";
+
+    response.innerHTML = "<p>Thinking...</p>";
 
     fetch("/chat", {
         method: "POST",
@@ -15,7 +16,8 @@ button.onclick = function() {
     })
     .then(res => res.json())
     .then(data => {
-        response.textContent = data.reply;
+        let formattedText = data.reply.replace(/\n/g, "\n\n");
+        response.innerHTML = marked.parse(formattedText);
     })
     .catch(error => {
         response.textContent = "Error: Could not reach the server.";
