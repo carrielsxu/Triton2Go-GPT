@@ -12,9 +12,18 @@ X = food[[
     "Sodium",
     "Fat",
     "Carbs",
+    "Allergy: dairy?",
+    "Allergy: eggs?",
+    "Allergy: gluten?",
+    "Allergy: soy?",
+    "Allergy: wheat?",
+    "Allergy: sesame?",
+    "Allergy: fish?",
     "Vegetarian?",
-    "Major allergens?",
-    "Vegan?"
+    "Vegan?",
+    "Time of day",
+    "Kind of product?",
+    "Dining hall",
 ]]
 
 y = []
