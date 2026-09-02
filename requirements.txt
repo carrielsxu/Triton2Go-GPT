@@ -1,2 +1,3 @@
-Flask
-Gunicorn
+flask
+pandas
+huggingface_hub
