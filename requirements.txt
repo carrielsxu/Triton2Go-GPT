@@ -1,3 +1,4 @@
 flask
 pandas
 huggingface_hub
+gunicorn
