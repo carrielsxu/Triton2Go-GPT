@@ -1,7 +1,7 @@
 body {
     background-color: #f5f5f5;
     padding: 50px;
-    font-family: Arial, sans-serif;
+    font-family: 'Courier New', Courier, monospace;
 }
 
 h1 {
@@ -42,4 +42,64 @@ button:hover {
 #response {
     margin-top: 30px;
     font-size: 16px;
+}
+
+#response {
+    margin-top: 30px;
+    font-size: 16px;
+    text-align: left;
+    line-height: 1.6;
+}
+
+#response h1,
+#response h2,
+#response h3 {
+    margin-top: 20px;
+}
+
+#response ul {
+    padding-left: 25px;
+}
+
+#response table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+#response th,
+#response td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+#response th {
+    background-color: #f0f0f0;
+}
+
+#response strong {
+    font-weight: bold;
+}
+
+#response {
+    margin-top: 30px;
+    font-size: 16px;
+    text-align: left;
+    line-height: 1.6;
+}
+
+#response p {
+    margin-bottom: 16px;
+}
+
+#response li {
+    margin-bottom: 10px;
+}
+
+#response h1,
+#response h2,
+#response h3 {
+    margin-top: 20px;
+    margin-bottom: 10px;
 }

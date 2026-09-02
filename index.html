@@ -1,22 +1,18 @@
 <!DOCTYPE html>
-
 <html>
 <head>
     <title>Triton2Go GPT</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
 </head>
-
 <body>
     <div class="chatbox">
         <h1>Triton2Go GPT</h1>
         <p>What are you looking for?</p>
-        
-        <input type="text" id="userInput">
+        <div id="response"></div>
+        <input type="text" id="userInput" placeholder="Ask me something...">
         <button id="submitButton">Submit</button>
-
-        <p id="response"></p>
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="script.js"></script>
 </body>
-
 </html>
