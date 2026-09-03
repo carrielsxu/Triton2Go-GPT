@@ -162,7 +162,7 @@ Do not leave out nutrition, allergy, dietary, time-of-day, product type, or dini
 
 Use this format:
 
-Food Name — Calories: ___, Fat: ___, Cholesterol: ___, Sodium: ___, Carbs: ___, Fiber: ___, Sugar: ___, Protein: ___, Dairy: ___, Eggs: ___, Gluten: ___, Soy: ___, Wheat: ___, Sesame: ___, Fish: ___, Vegetarian: ___, Vegan: ___, Time of day: ___, Kind of product: ___, Dining Hall: ___
+Food Name — Calories: ___, Fat: ___, Cholesterol: ___, Sodium: ___, Carbs: ___, Fiber: ___, Sugar: ___, Protein: ___, Dining Hall: ___
 
 Do not add information that is not present in the FOOD DATA.
 
