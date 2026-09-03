@@ -168,14 +168,19 @@ Remember the previous conversation when answering follow-up questions.
 
 ALWAYS randomize every single answer option's foods and do not respond with the same first few foods at the beginning of the list.
 
-Carefully look at every single item in the given file
+Carefully look at every single item in the given file.
+
+An example of a good answer:
+
+Signature Cheese Pizza - Calories: 745, Cholesterol: 71 mg, Sodium: 1359 mg, Carbs: 99 g, Fiber: 1 g, Sugar: 1g, Protein: 35 g, Dining Hall: Scholar's Pizza
+
 """
             },
 
-            # Previous conversation
+            # previous conversation
             *history,
 
-            # Current question and matching foods
+            # current question and matching foods
             {
                 "role": "user",
 
