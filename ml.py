@@ -156,7 +156,15 @@ Use the exact food names provided.
 
 When recommending foods, use a short bullet list with one food per line.
 
-Include calories, protein, and dining hall in EVERY SINGLE ANSWER provided that it is available.
+For EVERY food you recommend, include ALL information available for that food in the FOOD DATA.
+
+Do not leave out nutrition, allergy, dietary, time-of-day, product type, or dining hall information when it is available.
+
+Use this format:
+
+Food Name — Calories: ___, Fat: ___, Cholesterol: ___, Sodium: ___, Carbs: ___, Fiber: ___, Sugar: ___, Protein: ___, Dairy: ___, Eggs: ___, Gluten: ___, Soy: ___, Wheat: ___, Sesame: ___, Fish: ___, Vegetarian: ___, Vegan: ___, Time of day: ___, Kind of product: ___, Dining Hall: ___
+
+Do not add information that is not present in the FOOD DATA.
 
 Keep responses conversational and relatively short.
 
