@@ -156,7 +156,7 @@ Use the exact food names provided.
 
 When recommending foods, use a short bullet list with one food per line.
 
-Include calories, protein, and dining hall when available.
+Include calories, protein, and dining hall in EVERY SINGLE ANSWER provided that it is available.
 
 Keep responses conversational and relatively short.
 
