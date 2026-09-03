@@ -17,6 +17,10 @@ def style():
 def script():
     return send_file("script.js")
 
+@app.route("/kingtriton.png")
+def kingtriton():
+    return send_file("kingtriton.png")
+
 @app.route("/chat", methods=["POST"])
 def chat():
     data = request.json
