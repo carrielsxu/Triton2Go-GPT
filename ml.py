@@ -166,6 +166,8 @@ Food Name — Calories: ___, Fat: ___, Cholesterol: ___, Sodium: ___, Carbs: ___
 
 Do not add information that is not present in the FOOD DATA.
 
+If a field contains ? or N/A, please omit only that section from the answer.
+
 Keep responses conversational and relatively short.
 
 If there are no matching foods in the FOOD DATA, say that no matching foods were found.
