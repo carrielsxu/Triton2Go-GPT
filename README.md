@@ -23,7 +23,7 @@ The goal is simple: make deciding what to eat on campus easier, especially when 
 4. Matching rows are shuffled, and up to 100 are sent to a language model through Hugging Face's `InferenceClient`.
 5. The model is instructed to recommend only foods from those rows, and its response is displayed in the chat.
 
-The current model is `Qwen/Qwen3.8-27B`, configured in [`ml.py`](ml.py). The web app uses dataset filtering and model inference; the separate decision-tree experiments are not part of its recommendation flow.
+The current model is `gpt-oss-120b`, configured in [`ml.py`](ml.py). The web app uses dataset filtering and model inference; the separate decision-tree experiments are not part of its recommendation flow.
 
 ## Tech stack
 
